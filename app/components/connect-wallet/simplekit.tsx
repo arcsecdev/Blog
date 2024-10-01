@@ -456,6 +456,7 @@ function useSimpleKit() {
     isModalOpen,
     isConnected,
     formattedAddress,
+    address,
     open,
     close,
     toggleModal,

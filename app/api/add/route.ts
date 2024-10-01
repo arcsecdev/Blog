@@ -1,12 +1,18 @@
 import { NextResponse } from 'next/server';
 import fetch from 'node-fetch';
 
-export async function GET() {
-  console.log('GET request received for /api/posts');
+export async function POST(request: Request) {
+  console.log('POST request received for /api/add');
   try {
+    const { title, content, author } = await request.json();
+
+    if (!title || !content || !author) {
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    }
+
     const body = JSON.stringify({
       dbId: process.env.ARCSEC_DB_ID,
-      query: 'SELECT * FROM blog_posts',
+      query: `INSERT INTO blog_posts (title, content, author) VALUES ('${title}', '${content}', '${author}')`,
       walletAddress: process.env.ARCSEC_WALLET_ADDRESS,
       apiKey: process.env.ARCSEC_API_KEY
     });
@@ -32,18 +38,10 @@ export async function GET() {
     const data = await response.json();
     console.log('Parsed response data:', data);
 
-    // Add type assertion for data
-    const typedData = data as { result?: unknown[] };
-
-    if (!typedData.result || typedData.result.length === 0) {
-      console.log('No posts found, returning empty array');
-      return NextResponse.json([]);
-    }
-
-    console.log('Returning result array');
-    return NextResponse.json(typedData.result);
+    console.log('Post added successfully');
+    return NextResponse.json({ message: 'Post added successfully' }, { status: 201 });
   } catch (error: any) {
-    console.error('Error in GET /api/get-posts:', error);
-    return NextResponse.json({ error: 'Failed to fetch posts: ' + error.message }, { status: 500 });
+    console.error('Error in POST /api/posts/add:', error);
+    return NextResponse.json({ error: 'Failed to add post: ' + error.message }, { status: 500 });
   }
 }
