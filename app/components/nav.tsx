@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { ConnectWalletButton } from './connect-wallet/simplekit'
 
 const navItems = {
   '/': {
@@ -7,9 +8,9 @@ const navItems = {
   '/blog': {
     name: 'blog',
   },
-  'https://blog.arcsec.dev': {
-    name: 'deploy',
-  },
+  // 'https://blog.arcsec.dev': {
+  //   name: 'deploy',
+  // },
 }
 
 export function Navbar() {
@@ -32,7 +33,9 @@ export function Navbar() {
                 </Link>
               )
             })}
+            <ConnectWalletButton />
           </div>
+          
         </nav>
       </div>
     </aside>

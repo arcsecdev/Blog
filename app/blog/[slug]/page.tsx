@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { CustomMDX } from 'app/components/mdx'
+import { CustomMDX } from '@/app/components/mdx'
 
 // Remove the baseUrl import if it's not defined elsewhere
 // import { baseUrl } from 'app/sitemap'
@@ -17,15 +17,15 @@ function formatDate(dateString: string): string {
 export async function generateStaticParams() {
   const res = await fetch(`${baseUrl}/api/posts`);
   const posts = await res.json();
-  return posts.map((post) => ({
+  return posts.map((post: { slug: any; }) => ({
     slug: post.slug,
   }));
 }
 
-export async function generateMetadata({ params }) {
+export async function generateMetadata({ params }: { params: { slug: string } }) {
   const res = await fetch(`${baseUrl}/api/posts`);
   const posts = await res.json();
-  const post = posts.find((post) => post.slug === params.slug);
+  const post = posts.find((post: { slug: string }) => post.slug === params.slug);
   if (!post) {
     return;
   }
@@ -58,10 +58,10 @@ export async function generateMetadata({ params }) {
   }
 }
 
-export default async function Blog({ params }) {
+export default async function Blog({ params }: { params: { slug: string } }) {
   const res = await fetch(`${baseUrl}/api/posts`);
   const posts = await res.json();
-  const post = posts.find((post) => post.slug === params.slug);
+  const post = posts.find((post: { slug: string }) => post.slug === params.slug);
 
   if (!post) {
     notFound();
